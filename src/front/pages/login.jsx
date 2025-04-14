@@ -2,40 +2,34 @@ import React, { useEffect, useState } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { useNavigate} from "react-router-dom"
-export const Home = () => {
+export const Login = () => {
 
 
-	const { store, dispatch } = useGlobalReducer()
-	const [email, setemail] = useState("")
-	const [password, setpassword] = useState("")
-	const navigate= useNavigate()
-	const handleSubmit = async(e)=>{
-		e.preventDefault()
-		try { const response = await singup(email, password) 
-			const data = await response.json()
-			dispatch({type: "signup_request", payload: data.user})
-			navigate("/login")
-		} catch (error) {console.error("error de registro", error) 
-			
-		}
-	}
-
-	const singup = async(email,password)=>{
-		return await fetch (import.meta.env.VITE_BACKEND_URL+"api/signup",{
+    const { store, dispatch } = useGlobalReducer()
+    const [email, setemail] = useState("")
+    const [password, setpassword] = useState("")
+    const navigate= useNavigate()
+    const handleSubmit = async(e)=>{
+        e.preventDefault()
+        try { const response = await login(email, password) 
+            const data = await response.json()
+            dispatch({type: "login_request", payload:{user:data.user, token:data.access_token}})
+            navigate("/userAccount")
+        } catch (error) {console.error("error de login", error) 
+            
+        }
+    }
+	const login = async(email,password)=>{
+		return await fetch (import.meta.env.VITE_BACKEND_URL+"api/login",{
 			method:"POST",
 			headers: {"Content-Type":"application/json"},
 			body: JSON.stringify({email, password})
 		})
 	}
 
-
-	
-
-	
-
-	return (
+    return (
 		<div className="container mt-4" style={{ maxWidth: "400px", margin: "0 auto" }}>
-		<h2 className="mb-4">Registro</h2>
+		<h2 className="mb-4">Inicio de sesion</h2>
 	  
 		<div className="mb-3">
 		  <label htmlFor="email" className="form-label">Correo electrónico</label>
@@ -60,8 +54,12 @@ export const Home = () => {
 		</div>
 	  
 		<div className="d-grid">
-		  <button onClick={handleSubmit} className="btn btn-primary">Registrarse</button>
+		  <button onClick={handleSubmit} className="btn btn-primary">Inicio de sesion</button>
 		</div>
 	  </div>
 	);
-}; 
+    
+}
+    
+
+    
